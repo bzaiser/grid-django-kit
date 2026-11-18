@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="modal fade" id="{{ modal_id|default:'gridConfirmModal' }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <form method="post" action="{{ action_url|default:'' }}" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header py-2">
+                <h6 class="modal-title fw-bold">{{ title|default:_("Bestätigen") }}</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body small">
+                {{ body|default:_("Möchtest du diesen Vorgang wirklich ausführen?") }}
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-dismiss="modal">{% trans "Abbrechen" %}</button>
+                <button type="submit" class="btn btn-sm btn-danger rounded-pill">{% trans "Ja, ausführen" %}</button>
+            </div>
+        </form>
+    </div>
+</div>

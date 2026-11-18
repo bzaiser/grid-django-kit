@@ -1,0 +1,19 @@
+{% load i18n %}
+<form method="get" class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
+    <div class="input-group input-group-sm" style="max-width: 340px;">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="search" name="q" value="{{ grid_q|default:'' }}" class="form-control" placeholder="{% trans 'Suchen...' %}">
+        {% if grid_sort %}<input type="hidden" name="sort" value="{{ grid_sort }}">{% endif %}
+        <button type="submit" class="btn btn-primary">{% trans "Los" %}</button>
+    </div>
+    {% if grid_has_export %}
+    <div class="btn-group btn-group-sm">
+        <a href="?q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}&export=csv" class="btn btn-outline-secondary">
+            <i class="bi bi-filetype-csv me-1"></i>CSV
+        </a>
+        <a href="?q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}&export=json" class="btn btn-outline-secondary">
+            <i class="bi bi-filetype-json me-1"></i>JSON
+        </a>
+    </div>
+    {% endif %}
+</form>

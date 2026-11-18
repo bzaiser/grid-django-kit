@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grid-django-kit"
+version = "1.0.0"
+description = "Reusable Django list/search/sort/pagination views, CSV/JSON exports, and UI partials for django-design-studio."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "Django>=4.2",
+]
+
+[tool.setuptools.packages.find]
+include = ["grid_kit*"]
+
+[tool.setuptools.package-data]
+grid_kit = [
+    "templates/**/*",
+]
