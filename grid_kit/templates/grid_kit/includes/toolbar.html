@@ -4,14 +4,15 @@
         <span class="input-group-text"><i class="bi bi-search"></i></span>
         <input type="search" name="q" value="{{ grid_q|default:'' }}" class="form-control" placeholder="{% trans 'Suchen...' %}">
         {% if grid_sort %}<input type="hidden" name="sort" value="{{ grid_sort }}">{% endif %}
+        {% for ek, ev in grid_extra_params %}<input type="hidden" name="{{ ek }}" value="{{ ev }}">{% endfor %}
         <button type="submit" class="btn btn-primary">{% trans "Los" %}</button>
     </div>
     {% if grid_has_export %}
     <div class="btn-group btn-group-sm">
-        <a href="?q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}&export=csv" class="btn btn-outline-secondary">
+        <a href="?q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}{% if grid_extra_query %}&{{ grid_extra_query }}{% endif %}&export=csv" class="btn btn-outline-secondary">
             <i class="bi bi-filetype-csv me-1"></i>CSV
         </a>
-        <a href="?q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}&export=json" class="btn btn-outline-secondary">
+        <a href="?q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}{% if grid_extra_query %}&{{ grid_extra_query }}{% endif %}&export=json" class="btn btn-outline-secondary">
             <i class="bi bi-filetype-json me-1"></i>JSON
         </a>
     </div>

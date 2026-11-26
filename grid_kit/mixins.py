@@ -82,4 +82,9 @@ class DataGridMixin:
         ctx["grid_q"] = (self.request.GET.get("q") or "").strip()
         ctx["grid_sort"] = (self.request.GET.get("sort") or "").strip()
         ctx["grid_has_export"] = bool(self.export_fields)
+        extra = self.request.GET.copy()
+        for k in ("page", "export", "q", "sort"):
+            extra.pop(k, None)
+        ctx["grid_extra_query"] = extra.urlencode()
+        ctx["grid_extra_params"] = [(k, v) for k, vals in extra.lists() for v in vals]
         return ctx

@@ -3,7 +3,7 @@
     <ul class="pagination pagination-sm justify-content-end mb-0">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}">&laquo;</a>
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}{% if grid_extra_query %}&{{ grid_extra_query }}{% endif %}">&laquo;</a>
         </li>
         {% endif %}
         <li class="page-item disabled">
@@ -11,7 +11,7 @@
         </li>
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}">&raquo;</a>
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ grid_q|urlencode }}&sort={{ grid_sort|urlencode }}{% if grid_extra_query %}&{{ grid_extra_query }}{% endif %}">&raquo;</a>
         </li>
         {% endif %}
     </ul>
