@@ -9,26 +9,41 @@ def _resolve_attr(obj, field_path: str):
     val = obj
     for part in field_path.split("__"):
         val = getattr(val, part, "") if val is not None else ""
-        if callable(val):
+        if callable(val) and not getattr(val, "alters_data", False):
             val = val()
     return "" if val is None else val
 
 
+def _sanitize_csv_cell(val):
+    s = "" if val is None else str(val)
+    stripped = s.lstrip()
+    if stripped.startswith(("=", "+", "@", "\t", "\r")):
+        return "'" + s
+    if stripped.startswith("-") and not stripped[1:].replace(".", "", 1).replace(",", "", 1).isdigit():
+        return "'" + s
+    return s
+
+
+def _safe_filename(name: str, default: str) -> str:
+    cleaned = (name or "").replace('"', "").replace("\r", "").replace("\n", "").strip()
+    return cleaned or default
+
+
 def export_queryset_csv(queryset, fields, filename="export.csv") -> HttpResponse:
     resp = HttpResponse(content_type="text/csv; charset=utf-8")
-    resp["Content-Disposition"] = f'attachment; filename="{filename}"'
+    resp["Content-Disposition"] = f'attachment; filename="{_safe_filename(filename, "export.csv")}"'
     resp.write("\ufeff")
     writer = csv.writer(resp, delimiter=";")
     writer.writerow(fields)
-    for obj in queryset:
-        writer.writerow([_resolve_attr(obj, f) for f in fields])
+    for obj in queryset.iterator(chunk_size=500):
+        writer.writerow([_sanitize_csv_cell(_resolve_attr(obj, f)) for f in fields])
     return resp
 
 
 def export_queryset_json(queryset, fields, filename="export.json") -> HttpResponse:
-    rows = [{f: str(_resolve_attr(obj, f)) for f in fields} for obj in queryset]
+    rows = [{f: str(_resolve_attr(obj, f)) for f in fields} for obj in queryset.iterator(chunk_size=500)]
     resp = HttpResponse(json.dumps(rows, ensure_ascii=False, indent=2), content_type="application/json; charset=utf-8")
-    resp["Content-Disposition"] = f'attachment; filename="{filename}"'
+    resp["Content-Disposition"] = f'attachment; filename="{_safe_filename(filename, "export.json")}"'
     return resp
 
 
